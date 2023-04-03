@@ -1,7 +1,33 @@
 # Created by X-Corporation
-
-
 import math
+
+
+class EngineException(Exception):
+    # Code 0: Wrong input data
+    InitErr = "Error 0: Wrong initialization data"
+    VecListErr = "Error 0: Non-vector instance in the list of vectors"
+
+    # Code 1: Wrong matrix size
+    AddErr = "Error 1: Wrong matrix size for addition"
+    SubErr = "Error 1: Wrong matrix size for subtraction"
+    MulErr = "Error 1: Wrong matrix size for multiplication"
+    DivErr = "Error 1: Wrong matrix size for division"
+    DetErr = "Error 1: Wrong matrix size for determinant to be found"
+    InvErr = "Error 1: Wrong matrix size for the inversion"
+
+    # Code 2: Wrong vector size
+    ScalErr = "Error 2: Wrong vector size for scalar product"
+    VecErr = "Error 2: Wrong vector size for vector product"
+    DifErr = "Error 2: Different size of vectors in a list of vectors"
+
+    # Code 3: Wrong values
+    ZeroErr = "Error 3: Division by zero impossible"
+    DetInvErr = "Error 3: Wrong determinant value for the inversion"
+
+    # Code 4: Wrong operators
+    PointSubErr = "Error 4: Point can not be subtracted"
+    PointMulErr = "Error 4: Point can not be a multiplier"
+    PointDivErr = "Error 4: Point can not be a part of division"
 
 
 class Matrix:
@@ -11,13 +37,14 @@ class Matrix:
         n = len(llf[0])
         for i in range(1, self.m):
             if len(llf[i]) != n:
-                raise Exception ("Error 0: Wrong input data")
+                raise EngineException(EngineException.ZeroErr)
+
             n = len(llf[i])
         self.n = n
 
     def __add__(self, mat):
         if (self.m != mat.m) or (self.n != mat.n):
-            raise Exception("ERROR 1: Wrong matrix size for operation")
+            raise EngineException(EngineException.AddErr)
 
         for i in range(0, self.m):
             for j in range(0, self.n):
@@ -26,20 +53,20 @@ class Matrix:
 
     def __sub__(self, mat):
         if isinstance(mat, Point):
-            raise Exception("ERROR 4: Wrong operator")
+            raise EngineException(EngineException.PointSubErr)
 
         if (self.m != mat.m) or (self.n != mat.n):
-            raise Exception("ERROR 1: Wrong matrix size for operation")
+            raise EngineException(EngineException.SubErr)
 
         return self + (-1) * mat
 
     def __mul__(self, elem):
         if isinstance(elem, Point):
-            raise Exception("ERROR 4: Wrong operator")
+            raise EngineException(EngineException.PointMulErr)
 
         if isinstance(elem, Matrix):
             if self.n != elem.m:
-                raise Exception("ERROR 1: Wrong matrix size for operation")
+                raise EngineException(EngineException.MulErr)
 
             mat = list()
             line = list()
@@ -66,20 +93,24 @@ class Matrix:
 
     def __truediv__(self, elem):
         if isinstance(elem, Point):
-            raise Exception("ERROR 4: Wrong operator")
+            raise EngineException(EngineException.PointDivErr)
 
         if isinstance(elem, Matrix):
             mele = elem.inverse()
+            if self.n != mele.m:
+                raise EngineException(EngineException.DivErr)
+
             return mele * self
 
         else:
             if elem == 0:
-                raise Exception("ERROR 5: Division by zero")
+                raise EngineException(EngineException.ZeroErr)
+
             return self * (1/elem)
 
     def determinant(self):
         if self.m != self.n:
-            raise Exception("ERROR 1: Wrong matrix size for operation")
+            raise EngineException(EngineException.DetErr)
         det = 0
         elem = 1
 
@@ -121,10 +152,10 @@ class Matrix:
     def inverse(self):
         det = self.determinant()
         if self.m != self.n:
-            raise Exception("ERROR 1: Wrong matrix size for operation")
+            raise EngineException(EngineException.InvErr)
 
         if det == 0:
-            raise Exception("ERROR 2: Wrong determinant value for operation")
+            raise EngineException(EngineException.DetInvErr)
 
         matf = list()
         if self.m == 2:
@@ -186,7 +217,7 @@ class Matrix:
 
         for i in range(0, len(veclist)):
             if not isinstance(veclist[i], Vector):
-                raise Exception("ERROR 0: Wrong input data")
+                raise EngineException(EngineException.VecListErr)
 
             mv = veclist[i].m
             nv = veclist[i].n
@@ -195,7 +226,7 @@ class Matrix:
                 prevn = nv
                 continue
             elif (prevm != mv) or (prevn != nv):
-                raise Exception("ERROR 0: Wrong input data")
+                raise EngineException(EngineException.DifErr)
 
         mat = list()
         count = 0
@@ -207,6 +238,9 @@ class Matrix:
             mat.append(res)
         return Matrix(mat)
 
+    def rotation(self):
+        pass
+
 
 class Vector(Matrix):
     def __init__(self, llf):
@@ -215,11 +249,11 @@ class Vector(Matrix):
         self.floatlist = llf
         for i in range(0, self.m):
             if len(llf[0]) != 1:
-                raise Exception("Error 0: Wrong input data")
+                raise EngineException(EngineException.InitErr)
 
     def scalmul(self, vec):
         if (self.m != vec.m) or (self.n != vec.n):
-            raise Exception("ERROR 3: Wrong vector size for operation")
+            raise EngineException(EngineException.ScalErr)
 
         res = 0
         for i in range(0, self.m):
@@ -229,7 +263,7 @@ class Vector(Matrix):
 
     def vecmul(self, vec):
         if not((self.m == 3 and self.n == 1) and (vec.m == 3 and vec.n == 1)):
-            raise Exception("ERROR 3: Wrong vector size for operation")
+            raise EngineException(EngineException.VecErr)
 
         mat = [[0], [0], [0]]
         mat[0][0] = self.floatlist[1][0] * vec.floatlist[2][0] - self.floatlist[2][1] * vec.floatlist[1][0]
@@ -261,7 +295,7 @@ class VectorSpace:
         prevm = None
         for i in range(0, len(veclist)):
             if not isinstance(veclist[i], Vector):
-                raise Exception("ERROR 0: Wrong input data")
+                raise EngineException(EngineException.VecListErr)
 
             mv = veclist[i].m
             nv = veclist[i].n
@@ -270,7 +304,7 @@ class VectorSpace:
                 prevn = nv
                 continue
             elif (prevm != mv) or (prevn != nv):
-                raise Exception("ERROR 0: Wrong input data")
+                raise EngineException(EngineException.DifErr)
 
         self.veclist = veclist
 
