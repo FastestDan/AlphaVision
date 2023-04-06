@@ -23,6 +23,8 @@ class EngineException(Exception):
     # Code 3: Wrong values
     ZeroErr = "Error 3: Division by zero impossible"
     DetInvErr = "Error 3: Wrong determinant value for the inversion"
+    VecLenErr = "Error 3: Wrong size of list of vectors"
+    AxErr = "Error 3: Wrong axis"
 
     # Code 4: Wrong operators
     PointSubErr = "Error 4: Point can not be subtracted"
@@ -58,7 +60,7 @@ class Matrix:
         if (self.m != mat.m) or (self.n != mat.n):
             raise EngineException(EngineException.SubErr)
 
-        return self + (-1) * mat
+        return self + (mat * -1)
 
     def __mul__(self, elem):
         if isinstance(elem, Point):
@@ -150,9 +152,10 @@ class Matrix:
             return det
 
     def inverse(self):
-        det = self.determinant()
         if self.m != self.n:
             raise EngineException(EngineException.InvErr)
+
+        det = self.determinant()
 
         if det == 0:
             raise EngineException(EngineException.DetInvErr)
@@ -238,8 +241,33 @@ class Matrix:
             mat.append(res)
         return Matrix(mat)
 
-    def rotation(self):
-        pass
+    @staticmethod
+    def rotator(angle1, axis1, angle2=None, axis2=None, angle3=None, axis3=None):
+        m1 = None
+        if axis1.lower() == "x":
+            m1 = Matrix([[1, 0, 0],
+                         [0, round(math.cos(math.radians(angle1))), round(-math.sin(math.radians(angle1)))],  # Round нужон?
+                         [0, round(math.sin(math.radians(angle1))), round(math.cos(math.radians(angle1)))]])
+        elif axis1.lower() == "y":
+            m1 = Matrix([[round(math.cos(math.radians(angle1))), 0, round(math.sin(math.radians(angle1)))],
+                         [0, 1, 0],
+                         [round(-math.sin(math.radians(angle1))), round(math.cos(math.radians(angle1)))]])
+        elif axis1.lower() == "z":
+            m1 = Matrix([[round(math.cos(math.radians(angle1))), round(-math.sin(math.radians(angle1))), 0],
+                         [round(math.sin(math.radians(angle1))), round(math.cos(math.radians(angle1))), 0],
+                         [0, 0, 1]])
+        else:
+            raise EngineException(EngineException.AxErr)
+        if axis2 is not None and angle2 is not None:
+            m2 = Matrix.rotation(angle2, axis2)
+        else:
+            m2 = Matrix.identity(3)
+        if axis3 is not None and angle3 is not None:
+            m3 = Matrix.rotation(angle3, axis3)
+        else:
+            m3 = Matrix.identity(3)
+        res = m1 * m2 * m3
+        return res
 
 
 class Vector(Matrix):
@@ -248,7 +276,7 @@ class Vector(Matrix):
         self.n = 1
         self.floatlist = llf
         for i in range(0, self.m):
-            if len(llf[0]) != 1:
+            if len(llf[i]) != 1:
                 raise EngineException(EngineException.InitErr)
 
     def scalmul(self, vec):
@@ -266,7 +294,7 @@ class Vector(Matrix):
             raise EngineException(EngineException.VecErr)
 
         mat = [[0], [0], [0]]
-        mat[0][0] = self.floatlist[1][0] * vec.floatlist[2][0] - self.floatlist[2][1] * vec.floatlist[1][0]
+        mat[0][0] = self.floatlist[1][0] * vec.floatlist[2][0] - self.floatlist[2][0] * vec.floatlist[1][0]
         mat[1][0] = self.floatlist[2][0] * vec.floatlist[0][0] - self.floatlist[0][0] * vec.floatlist[2][0]
         mat[2][0] = self.floatlist[0][0] * vec.floatlist[1][0] - self.floatlist[1][0] * vec.floatlist[0][0]
         return Vector(mat)
@@ -278,14 +306,14 @@ class Vector(Matrix):
         return math.sqrt(self.scalmul(self))
 
     def __mod__(self, vec):
-        return BilinearForm(Matrix.identity(self.m).floatlist, self.floatlist, vec)
+        return BilinearForm(Matrix.identity(self.m).floatlist, self.floatlist, vec.floatlist)
 
 
 def BilinearForm(mat, vec1, vec2):
     res = 0
-    for i in range(0, vec1.length()):
-        for j in range(0, vec2.length()):
-            res += mat[i][j] * vec1[i] * vec2[j]
+    for i in range(0, len(vec1)):
+        for j in range(0, len(vec2)):
+            res += mat[i][j] * vec1[i][0] * vec2[j][0]
     return res
 
 
@@ -313,9 +341,12 @@ class VectorSpace:
 
     def vecform(self, pt):
         res = None
+        if pt.m != len(self.veclist):
+            raise EngineException(EngineException.VecLenErr)
+
         for i in range(0, pt.m):
-            vec = Vector(self.veclist[i])
-            vec *= pt[0][i]
+            vec = self.veclist[i]
+            vec *= pt.floatlist[i][0]
             if res is None:
                 res = vec
             else:
@@ -328,7 +359,7 @@ class Point(Vector):
         return Point(super().__add__(vec).floatlist)
 
     def __sub__(self, vec):
-        return self + (-1)*vec
+        return self + (vec * -1)
 
 
 class CoordinateSystem:
