@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66e47b18-607c-45ef-850f-9dc0a10d0794" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ErrorModule.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Module.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Alpha_Vision.py" beforeDir="false" afterPath="$PROJECT_DIR$/Alpha_Vision.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alpha_Vision.py" beforeDir="false" afterPath="$PROJECT_DIR$/DimensionModule.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Changelog.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Changelog.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Documentation.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Documentation.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LowLevelClassesTests.py" beforeDir="false" afterPath="$PROJECT_DIR$/LowLevelClassesTests.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -162,13 +162,13 @@
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Alpha_Vision.py</url>
-          <line>238</line>
+          <url>file://$PROJECT_DIR$/DimensionModule.py</url>
+          <line>206</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Alpha_Vision.py</url>
-          <line>331</line>
+          <url>file://$PROJECT_DIR$/DimensionModule.py</url>
+          <line>299</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
       </breakpoints>

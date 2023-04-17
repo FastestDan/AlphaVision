@@ -1,4 +1,5 @@
-import Alpha_Vision as av
+import DimensionModule as av
+import ErrorModule as em
 import pytest
 
 
@@ -30,7 +31,7 @@ class TestsMatrix:
         m1 = av.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
         m2 = av.Matrix([[10, 11, 12], [13, 14, 15], [16, 17, 18]])
 
-        with pytest.raises(av.EngineException):
+        with pytest.raises(em.EngineException):
             m1 + m2
 
     def test_subtraction(self=None):
@@ -46,7 +47,7 @@ class TestsMatrix:
         m1 = av.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
         m2 = av.Matrix([[10, 11, 12], [13, 14, 15], [16, 17, 18]])
 
-        with pytest.raises(av.EngineException):
+        with pytest.raises(em.EngineException):
             m1 - m2
 
     def test_determinant(self=None):
@@ -59,7 +60,7 @@ class TestsMatrix:
     def test_inversion_error(self=None):
         m1 = av.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
 
-        with pytest.raises(av.EngineException):
+        with pytest.raises(em.EngineException):
             m1.inverse()
 
     def test_determinant_for_inversion_error(self=None):
@@ -81,13 +82,13 @@ class TestsMatrix:
         m1 = av.Matrix([[1, 2, 3, 4], [4, 3, 2, 1]])
         m2 = av.Matrix([[4, 5], [6, 7], [8, 9]])
 
-        with pytest.raises(av.EngineException):
+        with pytest.raises(em.EngineException):
             m1 * m2
 
     def test_zero_error(self=None):
         m1 = av.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 
-        with pytest.raises(av.EngineException):
+        with pytest.raises(em.EngineException):
             m1 / 0
 
     def test_transposition(self=None):
@@ -106,11 +107,11 @@ class TestsMatrix:
         assert m1 == m2
 
     def test_n_rotator_index_error(self=None):
-        with pytest.raises(av.EngineException):
+        with pytest.raises(em.EngineException):
             av.Matrix.n_rotator(90, "ЫЫЫ", 2)
 
     def test_n_rotator_size_error(self=None):
-        with pytest.raises(av.EngineException):
+        with pytest.raises(em.EngineException):
             av.Matrix.n_rotator(90, [1, 2], 1)
 
     def test_minor(self=None):
@@ -136,7 +137,7 @@ class TestsMatrix:
         v2 = av.Vector([[0], [1], [0]])
         v3 = av.Vector([[0], [0], [1]])
 
-        with pytest.raises(av.EngineException):
+        with pytest.raises(em.EngineException):
             av.Matrix.gram([v1, v2, v3])
 
     def test_gram_error_vector_size(self=None):
@@ -144,13 +145,13 @@ class TestsMatrix:
         v2 = av.Vector([[0], [1], [0]])
         v3 = av.Vector([[0], [0], [1]])
 
-        with pytest.raises(av.EngineException):
+        with pytest.raises(em.EngineException):
             av.Matrix.gram([v1, v2, v3])
 
 
 class TestsVector:
     def test_init_error(self=None):
-        with pytest.raises(av.EngineException):
+        with pytest.raises(em.EngineException):
             av.Vector([[1], [2], [3, 4]])
 
     def test_init_states(self=None):
@@ -203,7 +204,7 @@ class TestsVectorSpace:
         v1 = av.Vector([[1], [2], [3]])
         v2 = av.Matrix([[4], [5], [6]])
 
-        with pytest.raises(av.EngineException):
+        with pytest.raises(em.EngineException):
             av.VectorSpace([v1, v2])
 
     def test_vector_form(self=None):
