@@ -1,5 +1,5 @@
 import DimensionModule as av
-import ErrorModule as em
+import ExceptionModule as em
 import pytest
 
 

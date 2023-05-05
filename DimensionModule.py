@@ -1,6 +1,6 @@
 # Created by X-Corporation
 import math
-from ErrorModule import EngineException
+from ExceptionModule import EngineException
 
 
 class Matrix:
@@ -74,7 +74,7 @@ class Matrix:
         return self.floatlist == elem.floatlist
 
     def __getitem__(self, item):
-        return Vector(self.floatlist[item]).transpose()
+        return Vector(self.transpose().floatlist[item])
 
     def addition(self, mat):
         if isinstance(mat, (int, float)) and mat == 0:
@@ -364,13 +364,22 @@ class Vector(Matrix):
     def dim(self):
         if self.is_column:
             return len(self.floatlist)
-        else:
-            return len(self.floatlist[0])
+        return len(self.floatlist[0])
 
     def __getitem__(self, item):
+        vec = self
         if self.is_column:
-            self.transpose()
-        return self.floatlist[0][item]
+            vec = vec.transpose()
+        return vec.floatlist[0][item]
+
+    def __str__(self):
+        return f"Vector[C: {str(self.is_column)[0]}]{{ {self.floatlist} }}"
+
+    def __repr__(self):
+        return self.__str__()
+
+    def normalize(self):
+        pass
 
 
 def BilinearForm(mat, vec1, vec2):
@@ -411,6 +420,7 @@ class VectorSpace:
                 res = vec
             else:
                 res += vec
+
         return res
 
 

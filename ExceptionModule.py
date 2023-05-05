@@ -33,3 +33,9 @@ class EngineException(Exception):
     POINT_SUBTRACTION_ERROR = "Error 4: Point can not be subtracted"
     POINT_MULTIPLICATION_ERROR = "Error 4: Point can not be a multiplier"
     POINT_DIVISION_ERROR = "Error 4: Point can not be a part of division"
+
+    PROPERTY_NOT_EXIST_ERROR = "Error 5: Property does not exist"
+    PROP_OF_PROPS_ERROR = "Error 5: Can't delete list of all properties"
+    ENTITY_NOT_EXIST_ERROR = "Error 5: Entity does not exist in the list"
+    VEC_PT_DIM_ERROR = "Error 5: Sizes of position and direction do not match"
+    NO_LOOK_ERROR = "Error 5: No point of view"
