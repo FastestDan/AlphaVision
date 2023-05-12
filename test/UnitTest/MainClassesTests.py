@@ -1,6 +1,6 @@
-import DimensionModule as dm
-import CoreModule as cm
-import ExceptionModule as em
+import lib.Math.DimensionModule as dm
+import lib.Engine.CoreModule as cm
+import lib.Exceptions.EngineExceptionModule as em
 import pytest
 
 

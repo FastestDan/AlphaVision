@@ -1,6 +1,6 @@
 # Created by X-Corporation
 import math
-from ExceptionModule import EngineException
+import lib.Exceptions.MathExceptionModule as mem
 
 
 class Matrix:
@@ -10,10 +10,10 @@ class Matrix:
         if val2 is not None:
 
             if not(isinstance(val2, int)) or not(isinstance(val, int)):
-                raise EngineException(EngineException.INIT_ERROR)
+                raise mem.MathException(mem.MathException.INIT_ERROR)
 
             if val2 == 0 or val == 0:
-                raise EngineException(EngineException.INIT_ERROR)
+                raise mem.MathException(mem.MathException.INIT_ERROR)
 
             self.floatlist = []
             for i in range(0, val):
@@ -26,7 +26,7 @@ class Matrix:
 
         elif isinstance(val, int):
             if val == 0:
-                raise EngineException(EngineException.INIT_ERROR)
+                raise mem.MathException(mem.MathException.INIT_ERROR)
 
             self.floatlist = []
             for i in range(0, val):
@@ -43,7 +43,7 @@ class Matrix:
             n = len(val[0])
             for i in range(0, self.m):
                 if len(val[i]) != n:
-                    raise EngineException(EngineException.INIT_ERROR)
+                    raise mem.MathException(mem.MathException.INIT_ERROR)
 
                 for j in range(0, n):
                     if isinstance(val[i][j], float):
@@ -53,7 +53,7 @@ class Matrix:
             self.n = n
 
         else:
-            raise EngineException(EngineException.INIT_ERROR)
+            raise mem.MathException(mem.MathException.INIT_ERROR)
 
     def __add__(self, mat):
         return self.addition(mat)
@@ -81,7 +81,7 @@ class Matrix:
             mat = Matrix(self.m, self.n)
 
         if (self.m != mat.m) or (self.n != mat.n):
-            raise EngineException(EngineException.ADDITION_ERROR)
+            raise mem.MathException(mem.MathException.ADDITION_ERROR)
 
         for i in range(0, self.m):
             for j in range(0, self.n):
@@ -90,20 +90,20 @@ class Matrix:
 
     def subtraction(self, mat):
         if isinstance(mat, Point):
-            raise EngineException(EngineException.POINT_SUBTRACTION_ERROR)
+            raise mem.MathException(mem.MathException.POINT_SUBTRACTION_ERROR)
 
         if (self.m != mat.m) or (self.n != mat.n):
-            raise EngineException(EngineException.SUBTRACTION_ERROR)
+            raise mem.MathException(mem.MathException.SUBTRACTION_ERROR)
 
         return self + (mat * -1)
 
     def multiplication(self, elem):
         if isinstance(elem, Point):
-            raise EngineException(EngineException.POINT_MULTIPLICATION_ERROR)
+            raise mem.MathException(mem.MathException.POINT_MULTIPLICATION_ERROR)
 
         if isinstance(elem, Matrix):
             if self.n != elem.m:
-                raise EngineException(EngineException.MULTIPLICATION_ERROR)
+                raise mem.MathException(mem.MathException.MULTIPLICATION_ERROR)
 
             mat = list()
             line = list()
@@ -131,18 +131,18 @@ class Matrix:
 
     def division(self, elem):
         if isinstance(elem, Point):
-            raise EngineException(EngineException.POINT_DIVISION_ERROR)
+            raise mem.MathException(mem.MathException.POINT_DIVISION_ERROR)
 
         if isinstance(elem, Matrix):
             mele = elem.inverse()
             if self.n != mele.m:
-                raise EngineException(EngineException.DIVISION_ERROR)
+                raise mem.MathException(mem.MathException.DIVISION_ERROR)
 
             return mele * self
 
         else:
             if elem == 0:
-                raise EngineException(EngineException.ZERO_ERROR)
+                raise mem.MathException(mem.MathException.ZERO_ERROR)
 
             return self * (1 / elem)
 
@@ -161,7 +161,7 @@ class Matrix:
 
     def determinant(self):  # By Arios Jentu
         if self.m != self.n:
-            raise EngineException(EngineException.DETERMINANT_ERROR)
+            raise mem.MathException(mem.MathException.DETERMINANT_ERROR)
 
         size = self.n
         if size == 1:
@@ -177,12 +177,12 @@ class Matrix:
 
     def inverse(self):
         if self.m != self.n:
-            raise EngineException(EngineException.INVERSION_ERROR)
+            raise mem.MathException(mem.MathException.INVERSION_ERROR)
 
         det = self.determinant()
 
         if det == 0:
-            raise EngineException(EngineException.INVERSION_DETERMINANT_ERROR)
+            raise mem.MathException(mem.MathException.INVERSION_DETERMINANT_ERROR)
 
         matf = list()
         if self.m == 2:
@@ -218,8 +218,8 @@ class Matrix:
         else:
             return Matrix(mat)
 
-    @staticmethod
-    def identity(n):
+    @classmethod
+    def identity(cls, n):
         mat = list()
         for i in range(0, n):
             line = list()
@@ -229,16 +229,16 @@ class Matrix:
                 else:
                     line.append(0.0)
             mat.append(line)
-        return Matrix(mat)
+        return cls(mat)
 
-    @staticmethod
-    def gram(veclist):
+    @classmethod
+    def gram(cls, veclist):
         prevn = None
         prevm = None
 
         for i in range(0, len(veclist)):
             if not isinstance(veclist[i], Vector) or isinstance(veclist[i], Point):
-                raise EngineException(EngineException.VECTOR_LIST_ERROR)
+                raise mem.MathException(mem.MathException.VECTOR_LIST_ERROR)
 
             mv = veclist[i].m
             nv = veclist[i].n
@@ -247,7 +247,7 @@ class Matrix:
                 prevn = nv
                 continue
             elif (prevm != mv) or (prevn != nv):
-                raise EngineException(EngineException.DIFFERENCE_ERROR)
+                raise mem.MathException(mem.MathException.DIFFERENCE_ERROR)
 
         mat = list()
         count = 0
@@ -257,45 +257,45 @@ class Matrix:
                 res.append(veclist[i] % veclist[j])
             count += 1
             mat.append(res)
-        return Matrix(mat)
+        return cls(mat)
 
-    @staticmethod
-    def n_rotator(angle, indexes: [int, int], n):
+    @classmethod
+    def n_rotator(cls, angle, indexes: [int, int], n):
         if not(isinstance(indexes, list)) or len(indexes) != 2:
-            raise EngineException(EngineException.INDEX_ERROR)
+            raise mem.MathException(mem.MathException.INDEX_ERROR)
 
         if indexes[0] == indexes[1]:
-            raise EngineException(EngineException.INDEX_ERROR)
+            raise mem.MathException(mem.MathException.INDEX_ERROR)
 
         if n < 2:
-            raise EngineException(EngineException.ROTATOR_SIZE_ERROR)
+            raise mem.MathException(mem.MathException.ROTATOR_SIZE_ERROR)
 
-        m1 = Matrix.identity(n).floatlist
+        m1 = cls.identity(n).floatlist
         i, j = indexes[0], indexes[1]
 
         m1[i][i] = math.cos(math.radians(angle))
         m1[j][j] = math.cos(math.radians(angle))
         m1[i][j] = math.sin(math.radians(angle)) * ((-1) ** (i + j))
         m1[j][i] = math.sin(math.radians(angle)) * ((-1) ** (i + j + 1))
-        res = Matrix(m1)
+        res = cls(m1)
         if i > j:
             res = res.transpose()
         return res
 
-    @staticmethod
-    def xyz_rotator(angles: [float, float, float]):
+    @classmethod
+    def xyz_rotator(cls, angles: [float, float, float]):
         if not isinstance(angles, list):
-            raise EngineException(EngineException.ANGLE_ERROR)
+            raise mem.MathException(mem.MathException.ANGLE_ERROR)
 
         if len(angles) > 3:
-            raise EngineException(EngineException.ANGLE_ERROR)
+            raise mem.MathException(mem.MathException.ANGLE_ERROR)
 
         while len(angles) < 3:
             angles.append(0.0)
 
-        return Matrix.n_rotator(angles[0], [1, 2], 3) * \
-               Matrix.n_rotator(angles[1], [0, 2], 3) * \
-               Matrix.n_rotator(angles[2], [0, 1], 3)
+        return cls.n_rotator(angles[0], [1, 2], 3) * \
+               cls.n_rotator(angles[1], [0, 2], 3) * \
+               cls.n_rotator(angles[2], [0, 1], 3)
 
 
 class Vector(Matrix):
@@ -319,7 +319,7 @@ class Vector(Matrix):
             super().__init__(temp1)
 
         else:
-            raise EngineException(EngineException.INIT_ERROR)
+            raise mem.MathException(mem.MathException.INIT_ERROR)
 
         self.is_column = len(self.floatlist[0]) == 1
 
@@ -331,7 +331,7 @@ class Vector(Matrix):
 
     def vector_product(self, vec):
         if self.is_column != vec.is_column:
-            raise EngineException(EngineException.STATE_ERROR)
+            raise mem.MathException(mem.MathException.STATE_ERROR)
 
         v1 = self
         v2 = vec
@@ -340,7 +340,7 @@ class Vector(Matrix):
             v2 = v2.transpose()
 
         if not((v1.m == 1 and v1.n == 3) and (v2.m == 1 and v2.n == 3)):
-            raise EngineException(EngineException.VECTOR_PRODUCT_ERROR)
+            raise mem.MathException(mem.MathException.VECTOR_PRODUCT_ERROR)
 
         i_vec = Vector([[1.0], [0.0], [0.0]])
         j_vec = Vector([[0.0], [1.0], [0.0]])
@@ -379,7 +379,7 @@ class Vector(Matrix):
         return self.__str__()
 
     def normalize(self):
-        pass
+        return self / self.length()
 
 
 def BilinearForm(mat, vec1, vec2):
@@ -401,7 +401,7 @@ class VectorSpace:
         for vec in veclist:
             if not isinstance(vec, Point) and isinstance(vec, Vector):
                 if vec.dim() != size:
-                    raise EngineException.VECTOR_SIZE_SPACE_ERROR
+                    raise mem.MathException(mem.MathException.VECTOR_SIZE_SPACE_ERROR)
 
         self.veclist = veclist
 
@@ -411,7 +411,7 @@ class VectorSpace:
     def vector_form(self, pt):
         res = None
         if pt.m != len(self.veclist):
-            raise EngineException(EngineException.VECTOR_LIST_SIZE_ERROR)
+            raise mem.MathException(mem.MathException.VECTOR_LIST_SIZE_ERROR)
 
         for i in range(0, pt.m):
             vec = self.veclist[i]

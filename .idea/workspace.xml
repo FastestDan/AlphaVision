@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66e47b18-607c-45ef-850f-9dc0a10d0794" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/MainClassesTests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VisualisationModule.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/AlphaVision.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AlphaVision.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Changelog.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Changelog.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CoreModule.py" beforeDir="false" afterPath="$PROJECT_DIR$/CoreModule.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DimensionModule.py" beforeDir="false" afterPath="$PROJECT_DIR$/DimensionModule.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ErrorModule.py" beforeDir="false" afterPath="$PROJECT_DIR$/ExceptionModule.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LowLevelClassesTests.py" beforeDir="false" afterPath="$PROJECT_DIR$/LowLevelClassesTests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoreModule.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DimensionModule.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ExceptionModule.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LowLevelClassesTests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainClassesTests.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +48,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
-  <component name="RunManager" selected="Python.TEST_PLACE">
+  <component name="RunManager" selected="Python tests.Python tests in MainClassesTests.py">
     <configuration name="TEST_PLACE" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="AlphaVision" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -70,7 +70,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for MainClassesTests.TestsEntity" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests in C:/Python/AlphaVision/LowLevelClassesTests.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="AlphaVision" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -80,39 +80,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;MainClassesTests.TestsEntity&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/LowLevelClassesTests.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for MainClassesTests.TestsGameObject" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="AlphaVision" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;MainClassesTests.TestsGameObject&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for MainClassesTests.TestsGameObject.test_move" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="AlphaVision" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;MainClassesTests.TestsGameObject.test_move&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests in MainClassesTests.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests in C:/Python/AlphaVision/MainClassesTests.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="AlphaVision" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -126,13 +98,41 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests in LowLevelClassesTests.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="AlphaVision" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/UnitTest/LowLevelClassesTests.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in MainClassesTests.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="AlphaVision" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/UnitTest/MainClassesTests.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.TEST_PLACE" />
         <item itemvalue="Python tests.Python tests in MainClassesTests.py" />
-        <item itemvalue="Python tests.Python tests for MainClassesTests.TestsGameObject" />
-        <item itemvalue="Python tests.Python tests for MainClassesTests.TestsGameObject.test_move" />
-        <item itemvalue="Python tests.Python tests for MainClassesTests.TestsEntity" />
+        <item itemvalue="Python tests.Python tests in LowLevelClassesTests.py" />
+        <item itemvalue="Python tests.Python tests in C:/Python/AlphaVision/LowLevelClassesTests.py" />
+        <item itemvalue="Python.TEST_PLACE" />
+        <item itemvalue="Python tests.Python tests in C:/Python/AlphaVision/MainClassesTests.py" />
       </list>
     </recent_temporary>
   </component>
@@ -166,19 +166,24 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/DimensionModule.py</url>
-          <line>206</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/DimensionModule.py</url>
-          <line>299</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/TEST_PLACE.py</url>
           <line>16</line>
           <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/YandexDisk/FD's Folder/Python/DungeonGame/Dungeon.py</url>
+          <line>5</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lib/Math/DimensionModule.py</url>
+          <line>1</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lib/Engine/CoreModule.py</url>
+          <line>2</line>
+          <option name="timeStamp" value="40" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

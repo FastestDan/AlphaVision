@@ -1,8 +1,9 @@
 # Created by X-Corporation
 
-import DimensionModule as dm
-import ExceptionModule as em
-import VisualisationModule as vm
+import lib.Math.DimensionModule as dm
+import lib.Exceptions.EngineExceptionModule as eem
+import lib.Engine.VisualisationModule as vm
+
 
 class Ray:
     def __init__(self, cs, initpt, direction):
@@ -11,7 +12,7 @@ class Ray:
         self.direction = direction
 
     def normalize(self):
-        return dm.Vector.normalize()
+        return self.direction.normalize()
 
 
 class Identifier:  # By Arios Jentu
@@ -52,23 +53,23 @@ class Entity:  # By Arios Jentu
 
     def set_property(self, prop, val):
         if prop == "properties":
-            raise em.EngineException(em.EngineException.PROP_OF_PROPS_ERROR)
+            raise eem.EngineException(eem.EngineException.PROP_OF_PROPS_ERROR)
 
         self.__dict__[prop] = val
         self.__dict__["properties"].add(prop)
 
     def get_property(self, prop):
         if prop not in self.__dict__["properties"]:
-            raise em.EngineException(em.EngineException.PROPERTY_NOT_EXIST_ERROR)
+            raise eem.EngineException(eem.EngineException.PROPERTY_NOT_EXIST_ERROR)
 
         return self.__dict__[prop]
 
     def remove_property(self, prop):
         if prop == "properties":
-            raise em.EngineException(em.EngineException.PROP_OF_PROPS_ERROR)
+            raise eem.EngineException(eem.EngineException.PROP_OF_PROPS_ERROR)
 
         if prop not in self.__dict__["properties"]:
-            raise em.EngineException(em.EngineException.PROPERTY_NOT_EXIST_ERROR)
+            raise eem.EngineException(eem.EngineException.PROPERTY_NOT_EXIST_ERROR)
 
         self.__delattr__(prop)
         self.__dict__["properties"].remove(prop)
@@ -97,7 +98,7 @@ class EntitiesList(list):
             if val.identifier.get_value() == identifier.get_value():
                 return val
         else:
-            raise em.EngineException(em.EngineException.ENTITY_NOT_EXIST_ERROR)
+            raise eem.EngineException(eem.EngineException.ENTITY_NOT_EXIST_ERROR)
 
     def exec(self, f, *args, **kwargs):
         for i in self:
@@ -165,7 +166,7 @@ class Game:
             def __init__(meself, pos: dm.Point, direction: dm.Vector):
                 super().__init__()
                 if pos.dim() != direction.dim():
-                    raise em.EngineException(em.EngineException.VEC_PT_DIM_ERROR)
+                    raise eem.EngineException(eem.EngineException.VEC_PT_DIM_ERROR)
 
                 meself.dim = direction.dim()
                 meself.set_position(pos)
@@ -188,8 +189,11 @@ class Game:
             def set_direction(meself, direction: dm.Vector):
                 meself.set_property("direction", direction)
 
-            def intersection_distance(meself, ray: Ray):
-                pass
+            def intersection_distance(meself, ray: Ray):  # А это точно оно?
+                # k = ((meself.direction.length()) ** 2) / (ray.direction % meself.direction)
+                # projection = k * ray.direction
+                # return projection.length()
+                return 0
 
         return GameObject
 
@@ -199,10 +203,12 @@ class Game:
             return self.camera_class
 
         class GameCamera(self.get_object_class()):
-            def __init__(meself, pos, fov, drawdist, dirlook):
+            def __init__(meself, pos, fov, drawdist, dirlook, vfov=None):
                 super().__init__(pos, dirlook)
-                # meself.set_position(pos)
+                if vfov is None:
+                    vfov = fov
                 meself.set_property("fov", fov)
+                meself.set_property("vfov", vfov)
                 meself.set_property("drawdist", drawdist)
 
                 if isinstance(dirlook, dm.Point):
@@ -211,16 +217,29 @@ class Game:
 
             def planar_rotate(meself, indices: [int, int], angle: float):
                 if meself.is_property_exist("look_at"):
-                    raise em.EngineException(em.EngineException.NO_LOOK_ERROR)
+                    raise eem.EngineException(eem.EngineException.NO_DIR_ERROR)
                 super().planar_rotate(angle, indices, meself.dim)
 
             def rotate_3d(meself, angles: [float, float, float]):
                 if meself.is_property_exist("look_at"):
-                    raise em.EngineException(em.EngineException.NO_LOOK_ERROR)
+                    raise eem.EngineException(eem.EngineException.NO_DIR_ERROR)
                 super().rotate_3d(angles)
 
-            def get_rays_matrix(meself, n, m):  # Matrix n*m {[Ray]}
-                pass
+            def get_rays_matrix(meself, n, m):  # Такое чувство, что это дичь какая-то
+                if meself.is_property_exist("look_at"):
+                    raise eem.EngineException(eem.EngineException.NO_DIR_ERROR)
+                raylist = []
+                alpha, beta = meself.fov, meself.vfov # 90.0, 0.0  # Откуда брать углы?
+                dalpha, dbeta = alpha/n, beta/m
+                for i in range(0, n):
+                    ai = dalpha * i - (alpha / 2)
+                    helper = []
+                    for j in range(0, m):
+                        bi = dbeta * j - (beta / 2)
+                        ray = dm.Matrix.n_rotator([0, 1], ai, 3) * dm.Matrix.n_rotator([0, 2], bi, 3) * meself.direction
+                        helper.append(ray)
+                    raylist.append(helper)
+                return dm.Matrix(raylist)
 
         return GameCamera
 
@@ -232,12 +251,6 @@ class Game:
         class GameHyperPlane(self.get_object_class()):
             def __init__(meself, position, normal):
                 super().__init__(position, normal)
-
-            def planar_rotate(meself, indices: [int, int], angle: float):
-                pass
-
-            def rotate_3d(meself, angles: [float, float, float]):
-                pass
 
             def intersection_distance(meself, ray):
                 pass
@@ -262,50 +275,3 @@ class Game:
                 pass
 
         return GameHyperEllipsoid
-
-
-
-# if __name__ == "__main__":
-#     basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-#     g1 = Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), EntitiesList())
-#     NewGameRay = g1.get_ray_class()
-#     ray = NewGameRay(dm.Point([0, 0, 0]), dm.Vector([0, 0, 1]))
-#     print(ray.initpt)
-#     print(ray.dir)
-#     print(ray.cs)
-#     NGen = g1.get_entity_class()
-#     entity = NGen()
-#     print(entity.identifier)
-#     exit()
-
-
-# class GameObject(GameEntity):  # Assistance required!
-#     def __init__(self, pos: dm.Point, dir: dm.Vector):
-#         self.pos = pos
-#         self.set_property("direction", dir)
-#
-#     def move(self, dir: dm.Vector) -> None:
-#         pass
-#
-#     def planer_rotate(self, indices: (int, int), angle: float):
-#         pass
-#
-#     def rotate_3d(self, angles: (float, float, float)):
-#         pass
-#
-#     def set_position(self, pos: dm.Point):
-#         pass
-#
-#     def set_direction(self, dir: dm.Vector):
-#         pass
-#
-# class GameCamera(GameObject):
-#     def __init__(self, pos, dirlook, fov, drawdist):
-#         self.pos = pos
-#         self.fov = fov
-#         self.drawdist = drawdist
-#
-#         if isinstance(dirlook, dm.Point):
-#             self.remove_property("direction")
-#             self.set_property("look_at", self.look_at)
-#         else setprop("dist", dirlook)
