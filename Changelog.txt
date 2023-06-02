@@ -1,4 +1,18 @@
+29/05/2023
+* Метод intersection_distance класса GameHyperPlane был переписан с использованием нужных формул.
+
+* В MainClassesTests.py были добавлены классы TestsGameHyperPlane, TestsGameHyperEllipsoid
+  для проверки работы соответствующих классов CoreModule
+
+* В CoreModule.py были добавлены классы EventSystem и GameConfiguration
+
 --------------------------------------------------------------------------------------------------------------------------------------------
+23/05/2023
+* В класс GameHyperEllipsoid были добавлены методы planar_rotate, rotate_3d, intersection_distance
+
+19/05/2023
+* В класс GameHyperPlane добавлен метод intersection_distance
+
 10/05/2023
 * Произведена реструктуризация файлов движка
 

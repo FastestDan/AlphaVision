@@ -1,3 +1,5 @@
+import math
+
 import lib.Math.DimensionModule as dm
 import lib.Engine.CoreModule as cm
 import lib.Exceptions.EngineExceptionModule as em
@@ -7,7 +9,7 @@ import pytest
 class TestsEntity:
     def test_get_property_error(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        entity = cm.Entity(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis))
+        entity = cm.Entity(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis))  # id = 0
         prop = "Power Up"
 
         with pytest.raises(em.EngineException):
@@ -15,7 +17,7 @@ class TestsEntity:
 
     def test_remove_property_error(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        entity = cm.Entity(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis))
+        entity = cm.Entity(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis))  # id = 1
         prop = "Power Up"
 
         with pytest.raises(em.EngineException):
@@ -28,8 +30,8 @@ class TestsEntitiesList:
         cs0 = dm.CoordinateSystem(dm.Point([0, 0, 0]), basis)
         cs1 = dm.CoordinateSystem(dm.Point([1, 1, 1]), basis)
 
-        entity1 = cm.Entity(cs0)
-        entity2 = cm.Entity(cs1)
+        entity1 = cm.Entity(cs0)  # id = 2
+        entity2 = cm.Entity(cs1)  # id = 3
         enlist = cm.EntitiesList()
         enlist.append(entity1)
 
@@ -40,8 +42,8 @@ class TestsEntitiesList:
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
         cs0 = dm.CoordinateSystem(dm.Point([0, 0, 0]), basis)
         cs1 = dm.CoordinateSystem(dm.Point([1, 1, 1]), basis)
-        entity1 = cm.Entity(cs0)
-        entity2 = cm.Entity(cs1)
+        entity1 = cm.Entity(cs0)  # id = 4
+        entity2 = cm.Entity(cs1)  # id = 5
 
         enlist = cm.EntitiesList()
 
@@ -55,6 +57,7 @@ class TestsEntitiesList:
         res = "That DAMN 4th Chaos Emerald"
 
         assert entity1.get_property(prop) == res
+        assert entity2.get_property(prop) == res
 
 
 class TestsGameObject:
@@ -77,7 +80,7 @@ class TestsGameObject:
         gobject = go_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]))
         gobject.planar_rotate([0, 1], 90.0)
 
-        res = dm.Vector([[1.0, -2.0, 0.0]])
+        res = dm.Vector([[-1.0], [2.0], [0.0]])
 
         assert gobject.direction == res
 
@@ -88,7 +91,7 @@ class TestsGameObject:
         gobject = go_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]))
         gobject.rotate_3d([90.0, 0, 90.0])
 
-        res = dm.Vector([[0.0, -2.0, -1.0]])
+        res = dm.Vector([[-1.0], [0.0], [2.0]])
 
         assert gobject.direction == res
 
@@ -131,3 +134,62 @@ class TestsGameCamera:
 
         with pytest.raises(em.EngineException):
             gobject.rotate_3d([90.0, 0, 90.0])
+
+
+class TestsGameHyperPlane:
+    def test_intersection(self=None):
+        basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        ghyper_class = g.get_hyper_plane_class()
+        hyper = ghyper_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]))
+        ray = cm.Ray(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), dm.Point([2, 2, 2]), dm.Vector([-1, -1, -1]))
+
+        res = math.sqrt(3)
+
+        assert hyper.intersection_distance(ray) == res
+
+    def test_intersection_parallel(self=None):
+        basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        ghyper_class = g.get_hyper_plane_class()
+        hyper = ghyper_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]))
+        ray = cm.Ray(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), dm.Point([2, 2, 2]), dm.Vector([0, 0, 0]))
+
+        with pytest.raises(em.EngineException):
+            hyper.intersection_distance(ray)
+
+
+class TestsGameHyperEllipsoid:
+    def test_intersection(self=None):
+        basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        ghyper_class = g.get_hyper_ellipsoid_class()
+        hyper = ghyper_class(dm.Point([1, 1, 1]), dm.Vector([1, 1, 1]), [1, 1, 1])
+        ray = cm.Ray(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), dm.Point([1, 1, 1]), dm.Vector([1, 1, 1]))
+
+        res = math.sqrt(3)
+
+        assert res == hyper.intersection_distance(ray)
+
+    def test_planar_rotate(self=None):
+        basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        ghyper_class = g.get_hyper_ellipsoid_class()
+        hyper = ghyper_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]), [2, 1, 0])
+
+        hyper.planar_rotate([0, 1], 90.0)
+
+        res = dm.Vector([[-1.0], [2.0], [0.0]])
+
+        assert hyper.direction == res
+
+    def test_3d_rotate(self=None):
+        basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        ghyper_class = g.get_hyper_ellipsoid_class()
+        hyper = ghyper_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]), [2, 1, 0])
+        hyper.rotate_3d([90.0, 0, 90.0])
+
+        res = dm.Vector([[-1.0], [0.0], [2.0]])
+
+        assert res == hyper.direction

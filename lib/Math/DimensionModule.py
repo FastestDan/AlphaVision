@@ -120,7 +120,10 @@ class Matrix:
                     count2 = 0
                     mat.append(line)
                     line = list()
-            return Matrix(mat)
+            if isinstance(elem, Vector):
+                return Vector(mat)
+            else:
+                return Matrix(mat)
 
         else:
             for i in range(0, self.m):
