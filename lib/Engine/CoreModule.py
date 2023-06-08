@@ -2,10 +2,9 @@
 
 import lib.Math.DimensionModule as dm
 import lib.Exceptions.EngineExceptionModule as eem
-import lib.Engine.VisualisationModule as vm
+import lib.Engine.ConfigurationModule as config
+import lib.Engine.EventsModule as event
 import math
-
-PRECISION = 3
 
 
 class Ray:
@@ -126,6 +125,7 @@ class Game:
         self.camera_class = self.get_camera_class()
         self.hyper_plane_class = self.get_hyper_plane_class()
         self.hyper_ellipsoid_class = self.get_hyper_ellipsoid_class()
+        # self.es = es  # {}
 
     def run(self):
         pass
@@ -135,6 +135,12 @@ class Game:
 
     def exit(self):
         pass
+
+    # def apply_configuration(self, configuration):
+    #     pass
+    #
+    # def get_event_system(self):
+    #     return self.es.EventSystem
 
     def get_entity_class(self):
 
@@ -195,9 +201,6 @@ class Game:
             @classmethod
             def intersection_distance(cls, ray: Ray):
                 return 0
-                # k = ((meself.direction.length()) ** 2) / (ray.direction % meself.direction)
-                # projection = k * ray.direction
-                # return projection.length()
 
         return GameObject
 
@@ -241,12 +244,14 @@ class Game:
 
                     for j in range(0, m):
                         bi = dbeta * j - (beta / 2)
+
                         if meself.is_property_exist("look_at"):
-                            ray = dm.Matrix.n_rotator([0, 1], ai, 3) * dm.Matrix.n_rotator([0, 2], bi, 3)\
-                                  * meself.look_at
+                            ray = dm.Matrix.n_rotator(ai, [0, 1], 3) * dm.Matrix.n_rotator(bi, [0, 2], 3)\
+                                  * meself.cs.vecspace.vector_form(meself.look_at - meself.pos).transpose()
                         else:
-                            ray = dm.Matrix.n_rotator([0, 1], ai, 3) * dm.Matrix.n_rotator([0, 2], bi, 3)\
-                                  * meself.direction
+                            ray = dm.Matrix.n_rotator(ai, [0, 1], 3) * dm.Matrix.n_rotator(bi, [0, 2], 3)\
+                                  * meself.direction.transpose()
+
                         helper.append(ray)
                     raylist.append(helper)
 
@@ -283,27 +288,6 @@ class Game:
                     else:
                         return (dirvec * t).length()
 
-                # d = -abc[0] * pos[0] - abc[1] * pos[1] - abc[2] * pos[2] # int
-                # mat_m = dm.Matrix([[abc[0], abc[1], abc[2]], [1/dirvec[0], -1/dirvec[1], 0], [1/dirvec[0], 0, -1/dirvec[2]]])  # Matrix
-                #
-                # if mat_m.determinant() == 0:
-                #     if (abc[0] * rpt[0] + abc[1] * rpt[1] + abc[2] * rpt[2]) == -d:
-                #         return 0
-                #     else:
-                #         raise eem.EngineException("Parallel ray")
-                #
-                # elif mat_m.determinant() != 0:
-                #
-                #     m_tam = mat_m.inverse()  # Matrix
-                #     lpt = dm.Vector([-d, ((pos[0]/dirvec[0]) - (pos[1]/dirvec[1])), ((pos[0]/dirvec[0]) - (pos[2]/dirvec[2]))])  # Vector
-                #     xyz = m_tam * lpt  # Vector
-                #     v = xyz - rpt  # Vector
-                #
-                #     if (dirvec[0]/v[0]) > 0:
-                #         return v.length()
-                #     else:
-                #         return -1  # Negative direction
-
         return GameHyperPlane
 
     def get_hyper_ellipsoid_class(self):
@@ -328,11 +312,17 @@ class Game:
                 dirvec = ray.direction  # Vector
                 abc = meself.direction  # Vector
 
-                alpha = (dirvec[0] ** 2)/(abc[0] ** 2) + (dirvec[1] ** 2)/(abc[1] ** 2) + (dirvec[2] ** 2)/(abc[2] ** 2)  # float
-                beta = 2 * ((dirvec[0] * rpt[0])/(abc[0] ** 2) + (dirvec[1] * rpt[1])/(abc[1] ** 2) + (dirvec[2] * rpt[2])/(abc[2] ** 2))  # float
-                gamma = (rpt[0] ** 2)/(abc[0] ** 2) + (rpt[1] ** 2)/(abc[1] ** 2) + (rpt[2] ** 2)/(abc[2] ** 2)  # float
+                alpha = 0
+                beta = 0
+                gamma = 0
 
-                # print(f"\n{alpha} {beta} {gamma}")
+                for i in range(0, len(abc)):
+                    alpha += (rpt[i] ** 2) / (abc[i] ** 2)
+                    beta += (dirvec[i] * rpt[i]) / (abc[i] ** 2)
+                    gamma += (dirvec[i] * rpt[i]) / (abc[i] ** 2)
+
+                beta *= 2
+                gamma -= 1
 
                 disc = beta ** 2 - 4 * alpha * gamma  # float
                 if disc < 0:
@@ -356,19 +346,15 @@ class Game:
 
                     else:
                         return -1
-                #
-                # if disc == 0:
-                #     t = -beta/(2 * alpha)  # float
-                #
-                #     xyz = dirvec*t + rpt #dm.Vector([dirvec[0] * t + rpt[0], dirvec[1] * t + rpt[1], dirvec[2] * t + rpt[2]])
-                #
-                #     v = xyz - rpt  # Vector  <==> v = dirvec * t
-                #
-                #     if t > 0:
-                #     # if (dirvec[0] / v[0]) > 0:
-                #         return v.length()
-                #     else:
-                #         return -1  # Negative direction
-                #     # return t
 
         return GameHyperEllipsoid
+
+# alpha = (rpt[0] ** 2) / (abc[0] ** 2) + (rpt[1] ** 2) / (abc[1] ** 2) + (rpt[2] ** 2) / (
+#         abc[2] ** 2)  # float
+# beta = 2 * ((dirvec[0] * rpt[0]) / (abc[0] ** 2) + (dirvec[1] * rpt[1]) / (abc[1] ** 2) + (
+#             dirvec[2] * rpt[2]) / (abc[2] ** 2))  # float
+# gamma = (dirvec[0] ** 2)/(abc[0] ** 2) + (dirvec[1] ** 2)/(abc[1] ** 2) + (dirvec[2] ** 2)/(abc[2] ** 2) - 1 # float
+
+
+# print(f"\n{alpha} {beta} {gamma}")
+

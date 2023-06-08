@@ -135,6 +135,20 @@ class TestsGameCamera:
         with pytest.raises(em.EngineException):
             gobject.rotate_3d([90.0, 0, 90.0])
 
+    def test_get_rays_matrix(self=None):
+        basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        go_class = g.get_camera_class()
+        gobject = go_class(dm.Point([1, 1, 1]), 90.0, 50.0, dm.Vector([1, 1, 1]))
+
+        camray = gobject.get_rays_matrix(3, 3)
+
+        res = dm.Matrix([[dm.Vector([[0.99982], [0.98639], [1.01362]]), dm.Vector([[1.00904], [0.98626], [1.00456]]), dm.Vector([[1.01818], [0.98614], [0.99542]])],
+                        [dm.Vector([[0.99076], [0.99548], [1.01362]]), dm.Vector([[0.99998], [0.99544], [1.00456]]), dm.Vector([[1.00912], [0.9954], [0.99542]])],
+                        [dm.Vector([[0.98162], [1.0045], [1.01362]]), dm.Vector([[0.99084], [1.00454], [1.00456]]), dm.Vector([[0.99998], [1.00458], [0.99542]])]])
+
+        assert res == camray
+
 
 class TestsGameHyperPlane:
     def test_intersection(self=None):

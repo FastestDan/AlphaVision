@@ -1,4 +1,5 @@
 # Created by X-Corporation
+
 import math
 import lib.Exceptions.MathExceptionModule as mem
 

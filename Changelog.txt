@@ -1,12 +1,19 @@
+08/06/2023
+* Был создан файл EventTests.py для проверки EventsModule.py
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+06/06/2023
+* Был создан файл ConfigTests.py для проверки ConfigurationModule
+
 29/05/2023
 * Метод intersection_distance класса GameHyperPlane был переписан с использованием нужных формул.
 
 * В MainClassesTests.py были добавлены классы TestsGameHyperPlane, TestsGameHyperEllipsoid
   для проверки работы соответствующих классов CoreModule
 
-* В CoreModule.py были добавлены классы EventSystem и GameConfiguration
+* Были добавлены файлы EventsModule.py и ConfigurationModule.py
 
---------------------------------------------------------------------------------------------------------------------------------------------
 23/05/2023
 * В класс GameHyperEllipsoid были добавлены методы planar_rotate, rotate_3d, intersection_distance
 

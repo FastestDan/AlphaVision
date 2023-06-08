@@ -2,9 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66e47b18-607c-45ef-850f-9dc0a10d0794" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/Engine/ConfigurationModule.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/Engine/EventsModule.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Game/Project-Game.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/UnitTest/ConfigTests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/UnitTest/EventTests.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Changelog.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Changelog.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/default.txt" beforeDir="false" afterPath="$PROJECT_DIR$/config/default.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/input.txt" beforeDir="false" afterPath="$PROJECT_DIR$/input.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Engine/CoreModule.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Engine/CoreModule.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Engine/VisualisationModule.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Engine/VisualisationModule.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Math/DimensionModule.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Math/DimensionModule.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/UnitTest/MainClassesTests.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/UnitTest/MainClassesTests.py" afterDir="false" />
     </list>
@@ -45,7 +53,28 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
-  <component name="RunManager" selected="Python.TEST_PLACE">
+  <component name="RunManager" selected="Python tests.Python tests for EventTests.TestsEvent">
+    <configuration name="Project-Game" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="AlphaVision" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/Game" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/Game/Project-Game.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="TEST_PLACE" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="AlphaVision" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -67,7 +96,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for MainClassesTests.TestsGameHyperPlane" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for ConfigTests.TestsConfig" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="AlphaVision" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -77,11 +106,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;MainClassesTests.TestsGameHyperPlane&quot;" />
+      <option name="_new_target" value="&quot;ConfigTests.TestsConfig&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for MainClassesTests.TestsGameHyperPlane.test_intersection" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for EventTests.TestsEvent" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="AlphaVision" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -91,11 +120,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;MainClassesTests.TestsGameHyperPlane.test_intersection&quot;" />
+      <option name="_new_target" value="&quot;EventTests.TestsEvent&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for MainClassesTests.TestsGameHyperPlane.test_intersection_parallel" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests in ConfigTests.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="AlphaVision" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -105,31 +134,17 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;MainClassesTests.TestsGameHyperPlane.test_intersection_parallel&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests in MainClassesTests.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="AlphaVision" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/UnitTest/MainClassesTests.py&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/UnitTest/ConfigTests.py&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for EventTests.TestsEvent" />
+        <item itemvalue="Python.Project-Game" />
+        <item itemvalue="Python tests.Python tests in ConfigTests.py" />
         <item itemvalue="Python.TEST_PLACE" />
-        <item itemvalue="Python tests.Python tests in MainClassesTests.py" />
-        <item itemvalue="Python tests.Python tests for MainClassesTests.TestsGameHyperPlane.test_intersection_parallel" />
-        <item itemvalue="Python tests.Python tests for MainClassesTests.TestsGameHyperPlane" />
-        <item itemvalue="Python tests.Python tests for MainClassesTests.TestsGameHyperPlane.test_intersection" />
+        <item itemvalue="Python tests.Python tests for ConfigTests.TestsConfig" />
       </list>
     </recent_temporary>
   </component>
@@ -168,24 +183,38 @@
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/lib/Math/DimensionModule.py</url>
-          <line>1</line>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/lib/Engine/CoreModule.py</url>
           <line>2</line>
           <option name="timeStamp" value="40" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/lib/Engine/CoreModule.py</url>
-          <line>319</line>
+          <line>303</line>
           <option name="timeStamp" value="56" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test/UnitTest/MainClassesTests.py</url>
-          <line>179</line>
+          <line>193</line>
           <option name="timeStamp" value="58" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/TEST_PLACE.py</url>
+          <line>14</line>
+          <option name="timeStamp" value="61" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lib/Engine/CoreModule.py</url>
+          <line>251</line>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lib/Engine/ConfigurationModule.py</url>
+          <line>41</line>
+          <option name="timeStamp" value="63" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/UnitTest/ConfigTests.py</url>
+          <option name="timeStamp" value="64" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

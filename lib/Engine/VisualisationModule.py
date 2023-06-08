@@ -14,11 +14,11 @@ class GameCanvas:
         pass
 
     def update(self, camera):
+        self.distances = camera.get_rays_matrix(self.n, self.m)
+
+
+class GameConsole(GameCanvas):
+    charmap = ".:;><+r*zsvfwqkP694VOGbUAKXH8RD#$B0MNWQ%&@"
+
+    def draw(self):
         pass
-
-
-# class GameConsole(GameCanvas):
-#     charmap = ".:;><+r*zsvfwqkP694VOGbUAKXH8RD#$B0MNWQ%&@"
-#
-#     def draw(self):
-#         pass
