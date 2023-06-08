@@ -2,19 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66e47b18-607c-45ef-850f-9dc0a10d0794" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/Engine/ConfigurationModule.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Engine/EventsModule.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Game/Project-Game.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/UnitTest/ConfigTests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/UnitTest/EventTests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Changelog.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Changelog.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/default.txt" beforeDir="false" afterPath="$PROJECT_DIR$/config/default.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/input.txt" beforeDir="false" afterPath="$PROJECT_DIR$/input.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Engine/CoreModule.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Engine/CoreModule.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Engine/VisualisationModule.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Engine/VisualisationModule.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Math/DimensionModule.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Math/DimensionModule.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/UnitTest/MainClassesTests.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/UnitTest/MainClassesTests.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

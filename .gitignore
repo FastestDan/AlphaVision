@@ -3,3 +3,4 @@ TEST_PLACE.py
 *.xml
 .idea/workspace.xml
 *.xml
+input.txt

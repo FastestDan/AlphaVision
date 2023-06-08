@@ -116,7 +116,7 @@ class EntitiesList(list):
 
 
 class Game:
-    def __init__(self, cs, entities):
+    def __init__(self, cs, es, entities):
         self.cs = cs
         self.entities = entities
         self.entity_class = self.get_entity_class()
@@ -125,7 +125,7 @@ class Game:
         self.camera_class = self.get_camera_class()
         self.hyper_plane_class = self.get_hyper_plane_class()
         self.hyper_ellipsoid_class = self.get_hyper_ellipsoid_class()
-        # self.es = es  # {}
+        self.es = es  # {}
 
     def run(self):
         pass
@@ -136,11 +136,11 @@ class Game:
     def exit(self):
         pass
 
-    # def apply_configuration(self, configuration):
-    #     pass
-    #
-    # def get_event_system(self):
-    #     return self.es.EventSystem
+    def apply_configuration(self, configuration):
+        pass
+
+    def get_event_system(self):
+        return self.es.EventSystem
 
     def get_entity_class(self):
 
