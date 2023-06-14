@@ -1,1 +1,2 @@
-Blank: YES~
+Screen Width: 1280
+Screen Height: 720

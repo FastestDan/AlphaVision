@@ -50,7 +50,6 @@ class TestsEvent:
 
         assert res == b
 
-
     def test_get_handled(self=None):
         evdict = dict({"W": [list.append], "S": [list.remove]})
         a = es(evdict)

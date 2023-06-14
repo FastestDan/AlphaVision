@@ -1,13 +1,18 @@
 # Created by X-Corporation
 
 import lib.Exceptions.EngineExceptionModule as eem
-
+import os
 
 class GameConfiguration:
     def __init__(self, filepath=None):
         if filepath is None or filepath == "":
             self.filepath = None
-            file = open("config/default.txt", "r")
+            par_dir = ""
+            cur_dir = os.path.dirname(__file__)
+            for i in range(0, 2):
+                par_dir = os.path.split(cur_dir)[0]
+                cur_dir = par_dir
+            file = open((par_dir + "\config\default.txt"), "r")
         else:
             self.filepath = filepath
             file = open(self.filepath, "r")

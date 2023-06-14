@@ -3,6 +3,7 @@ import math
 import lib.Math.DimensionModule as dm
 import lib.Engine.CoreModule as cm
 import lib.Exceptions.EngineExceptionModule as em
+import lib.Engine.EventsModule as es
 import pytest
 
 
@@ -63,7 +64,7 @@ class TestsEntitiesList:
 class TestsGameObject:
     def test_move(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         go_class = g.get_object_class()
         gobject = go_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]))
         vec = dm.Vector([5, 4, 3])
@@ -75,7 +76,7 @@ class TestsGameObject:
 
     def test_planar_rotate(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         go_class = g.get_object_class()
         gobject = go_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]))
         gobject.planar_rotate([0, 1], 90.0)
@@ -86,7 +87,7 @@ class TestsGameObject:
 
     def test_rotate_3d(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         go_class = g.get_object_class()
         gobject = go_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]))
         gobject.rotate_3d([90.0, 0, 90.0])
@@ -99,7 +100,7 @@ class TestsGameObject:
 class TestsGameCamera:
     def test_init_direction(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         go_class = g.get_camera_class()
         gobject = go_class(dm.Point([1, 1, 1]), 90.0, 50.0, dm.Vector([2, 1, 0]))
 
@@ -109,7 +110,7 @@ class TestsGameCamera:
 
     def test_init_look_at(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         go_class = g.get_camera_class()
         gobject = go_class(dm.Point([1, 1, 1]), 90.0, 50.0, dm.Point([2, 1, 0]))
 
@@ -119,7 +120,7 @@ class TestsGameCamera:
 
     def test_planar_rotate_error(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         go_class = g.get_camera_class()
         gobject = go_class(dm.Point([1, 1, 1]), 90.0, 50.0, dm.Point([2, 1, 0]))
 
@@ -128,7 +129,7 @@ class TestsGameCamera:
 
     def test_rotate_3d_error(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         go_class = g.get_camera_class()
         gobject = go_class(dm.Point([1, 1, 1]), 90.0, 50.0, dm.Point([2, 1, 0]))
 
@@ -137,7 +138,7 @@ class TestsGameCamera:
 
     def test_get_rays_matrix(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         go_class = g.get_camera_class()
         gobject = go_class(dm.Point([1, 1, 1]), 90.0, 50.0, dm.Vector([1, 1, 1]))
 
@@ -153,7 +154,7 @@ class TestsGameCamera:
 class TestsGameHyperPlane:
     def test_intersection(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         ghyper_class = g.get_hyper_plane_class()
         hyper = ghyper_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]))
         ray = cm.Ray(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), dm.Point([2, 2, 2]), dm.Vector([-1, -1, -1]))
@@ -164,7 +165,7 @@ class TestsGameHyperPlane:
 
     def test_intersection_parallel(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         ghyper_class = g.get_hyper_plane_class()
         hyper = ghyper_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]))
         ray = cm.Ray(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), dm.Point([2, 2, 2]), dm.Vector([0, 0, 0]))
@@ -176,7 +177,7 @@ class TestsGameHyperPlane:
 class TestsGameHyperEllipsoid:
     def test_intersection(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         ghyper_class = g.get_hyper_ellipsoid_class()
         hyper = ghyper_class(dm.Point([1, 1, 1]), dm.Vector([1, 1, 1]), [1, 1, 1])
         ray = cm.Ray(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), dm.Point([1, 1, 1]), dm.Vector([1, 1, 1]))
@@ -187,7 +188,7 @@ class TestsGameHyperEllipsoid:
 
     def test_planar_rotate(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         ghyper_class = g.get_hyper_ellipsoid_class()
         hyper = ghyper_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]), [2, 1, 0])
 
@@ -199,7 +200,7 @@ class TestsGameHyperEllipsoid:
 
     def test_3d_rotate(self=None):
         basis = dm.VectorSpace([dm.Vector([1, 0, 0]), dm.Vector([0, 1, 0]), dm.Vector([0, 0, 1])])
-        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList())
+        g = cm.Game(dm.CoordinateSystem(dm.Point([0, 0, 0]), basis), cm.EntitiesList(), es.EventSystem(dict({})))
         ghyper_class = g.get_hyper_ellipsoid_class()
         hyper = ghyper_class(dm.Point([1, 1, 1]), dm.Vector([2, 1, 0]), [2, 1, 0])
         hyper.rotate_3d([90.0, 0, 90.0])

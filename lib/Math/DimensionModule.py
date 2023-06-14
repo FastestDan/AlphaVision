@@ -77,17 +77,32 @@ class Matrix:
     def __getitem__(self, item):
         return Vector(self.transpose().floatlist[item])
 
+    def __setitem__(self, key, value):
+        self.floatlist[key] = value
+
+    def __iter__(self):
+        for lst in self.floatlist:
+            yield lst
+
     def addition(self, mat):
         if isinstance(mat, (int, float)) and mat == 0:
             mat = Matrix(self.m, self.n)
+
+        res = list()
 
         if (self.m != mat.m) or (self.n != mat.n):
             raise mem.MathException(mem.MathException.ADDITION_ERROR)
 
         for i in range(0, self.m):
+            line = list()
             for j in range(0, self.n):
-                self.floatlist[i][j] += mat.floatlist[i][j]
-        return self
+                line.append(self.floatlist[i][j] + mat.floatlist[i][j])
+            res.append(line)
+
+        if isinstance(self, Vector):
+            return Vector(res)
+        else:
+            return Matrix(res)
 
     def subtraction(self, mat):
         if isinstance(mat, Point):
@@ -96,7 +111,9 @@ class Matrix:
         if (self.m != mat.m) or (self.n != mat.n):
             raise mem.MathException(mem.MathException.SUBTRACTION_ERROR)
 
-        return self + (mat * -1)
+        res = self + (mat * -1)
+
+        return res
 
     def multiplication(self, elem):
         if isinstance(elem, Point):
@@ -127,11 +144,18 @@ class Matrix:
                 return Matrix(mat)
 
         else:
+            res = list()
             for i in range(0, self.m):
+                line = list()
                 for j in range(0, self.n):
-                    self.floatlist[i][j] *= elem
-                    self.floatlist[i][j] = round(self.floatlist[i][j], self.ep)
-            return self
+                    a = self.floatlist[i][j]
+                    line.append(round(a * elem, self.ep))
+                res.append(line)
+            if isinstance(self, Vector):
+                return Vector(res)
+            else:
+                return Matrix(res)
+
 
     def division(self, elem):
         if isinstance(elem, Point):
@@ -360,7 +384,7 @@ class Vector(Matrix):
         return self.vector_product(vec)
 
     def length(self):
-        return math.sqrt(self.scalar_product(self))
+        return round((math.sqrt(self.scalar_product(self))), Matrix.ep)
 
     def __mod__(self, vec):
         return self.scalar_product(vec)
@@ -439,7 +463,7 @@ class Point(Vector):
         return Point(super().__add__(vec).floatlist)
 
     def __sub__(self, vec):
-        return self + (vec * -1)
+        return Point(super().__add__(vec * -1).floatlist)
 
 
 class CoordinateSystem:
