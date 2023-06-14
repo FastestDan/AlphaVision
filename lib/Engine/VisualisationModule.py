@@ -11,6 +11,7 @@ class GameCanvas:
         self.n = n
         self.m = m
         self.distances = dm.Matrix(n, m)  # Matrix n*m {[float]}
+        self.out = None
 
     def draw(self, screen, key):
         pass
@@ -19,80 +20,62 @@ class GameCanvas:
     def update(self, camera, entities):
         rays = camera.get_rays_matrix(self.n, self.m)
 
-        for entity in entities:
-            for j in range(0,  self.m):
-                for k in range(0, self.n):
-                    val = entity.intersection_distance(rays[j][k])
-                    if val == -1:
-                        continue
-                    self.distances.floatlist[k][j] = min(self.distances.floatlist[k][j], val)
-
-        # for i in range(0, len(entities)):
-        #     for j in range(0,  self.n):
-        #         for k in range(0, self.m):
-        #             self.distances.floatlist[j][k] = entities[cm.Identifier(i)].intersection_distance(distances[k][j])
+        for i in range(0, self.n):
+            for j in range(0, self.m):
+                res = []
+                for entity in entities:
+                    res.append(entity.intersection_distance(rays[i][j]))
+                res = [x for x in res if x > 0]
+                if len(res) == 0:
+                    res = 0
+                else:
+                    res = min(res)
+                self.distances[i][j] = res
 
 
 class GameConsole(GameCanvas):
-    charmap = ".:;><+r*zsvfwqkP694VOGbUAKXH8RD#$B0MNWQ%& "
+    charmap = "MNBQWRPAw9876543210fghjkqertyzxcv;:-----------------                           "
 
     def __init__(self, n, m):
         super().__init__(n, m)
 
     def update(self, camera, entities):
         dd = camera.get_property("drawdist")
-        # TODO: Пробежать по всем лучам, по всем объектам, и спросить точку пересечения. Получить массив distances
-        rays = camera.get_rays_matrix(self.n, self.m) # MARK: Сейчас это просто массив лучей, их нужно пересечь со списком сущностей
-        distances = [[None for i in range(0, self.n)] for j in range(0, self.m)]
+        rays = camera.get_rays_matrix(self.n, self.m)
 
-        for entity in entities:
-            for j in range(0,  self.m):
-                for k in range(0, self.n):
-                    val = entity.intersection_distance(rays[j][k])
-                    if val == -1:
-                        continue
-                    distances[j][k] = min(distances[j][k], val) if (distances[j][k] is not None) else val
+        for i in range(0, self.n):
+            for j in range(0, self.m):
+                temp = list()
+                for elem in entities:
+                    temp.append(elem.intersection_distance(rays[j][i]))
+                temp = [x for x in temp if x > 0]
+                if len(temp) == 0:
+                    temp = 0
+                else:
+                    temp = min(temp)
+                self.distances.floatlist[i][j] = temp
 
-        # for i in range(0, self.n):
-        #     for j in range(0, self.m):
-        #         temp = list()
-        #         for elem in entities:
-        #             temp.append(elem.intersection_distance(rays[j][i]))
-        #         temp = [x for x in temp if x > 0]
-        #         if len(temp) == 0:
-        #             temp = 0
-        #         else:
-        #             temp = min(temp)
-        #         distances[i][j] = temp
 
-        dchar = len(GameConsole.charmap) / dd
+        dchar = dd / len(GameConsole.charmap)
+        step = [dchar * i for i in range(len(GameConsole.charmap))]
 
-        # dchar = dd / len(GameConsole.charmap)
-        # step = [dchar * i for i in range(len(GameConsole.charmap))]
+        mat = self.distances
+        out = dm.Matrix(self.n, self.m)
 
-        self.distances = dm.Matrix([
-            [
-                GameConsole.charmap[::-1][int(dist*dchar)]
-                if dist < dd else " "
-                for dist in dist_list
-            ]
-            for dist_list in distances
-        ])
+        for i in range(0, self.n):
+            for j in range(0, self.m):
+                for k in range(0, len(GameConsole.charmap)):
+                    if mat.floatlist[i][j] == 0 or mat.floatlist[i][j] > dd:
+                        out.floatlist[i][j] = '-'
+                        break
+                    if mat.floatlist[i][j] < step[k]:
+                        out.floatlist[i][j] = GameConsole.charmap[k]
+                        break
 
-        # self.distances = dm.Matrix(self.n, self.m)
-        # for i in range(0, self.n):
-        #     for j in range(0, self.m):
-        #         for k in range(0, len(GameConsole.charmap)):
-        #             if distances[i][j] == 0 or distances[i][j] > dd:
-        #                 self.distances.floatlist[i][j] = ' '
-        #                 break
-        #             if distances[i][j] < step[k]:
-        #                 self.distances.floatlist[i][j] = GameConsole.charmap[k]
-        #                 break
-
+        self.out = out
 
     def draw(self, screen, key=None):
-        dims = screen.getmaxyx()
+        dims = [self.n, self.m]
         start = ["           _       _        __      ___     _             ",
                  "     /\   | |     | |       \ \    / (_)   (_)            ",
                  "    /  \  | |_ __ | |__   __ \ \  / / _ ___ _  ___  _ __  ",
@@ -121,7 +104,7 @@ class GameConsole(GameCanvas):
         elif key == '-1':
             screen.addstr(dims[0] // 2, dims[1] // 2, "See you later!", curses.color_pair(1))
             screen.addstr(dims[0] // 2 + 1, dims[1] // 2, "Shutting down...", curses.color_pair(1))
-            screen.border(5, 5, 6, 6, 1, 2, 3, 4)
+            # screen.border(5, 5, 6, 6, 1, 2, 3, 4)
             screen.refresh()
             screen.getch()
             z = 0
@@ -140,11 +123,11 @@ class GameConsole(GameCanvas):
         elif key is None:
             for j in range(1, self.n-1):
                 for k in range(1, self.m-1):
-                    screen.addstr(k, j, self.distances[j][k])
-            screen.border(5, 5, 6, 6, 1, 2, 3, 4)
+                    screen.addstr(j, k, self.out.floatlist[j][k])
+            # screen.border(5, 5, 6, 6, 1, 2, 3, 4)
             screen.refresh()
 
         else:
             screen.addstr(dims[0] - 4, dims[1] - 30, key, curses.color_pair(1))
-            screen.border(5, 5, 6, 6, 1, 2, 3, 4)
+            # screen.border(5, 5, 6, 6, 1, 2, 3, 4)
             screen.refresh()

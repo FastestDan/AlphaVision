@@ -5,7 +5,7 @@ import lib.Exceptions.MathExceptionModule as mem
 
 
 class Matrix:
-    ep = 5
+    ep = 20
 
     def __init__(self, val, val2=None):
         if val2 is not None:

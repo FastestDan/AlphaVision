@@ -25,39 +25,38 @@ class Game(cm.Game):
         curses.start_color()
         self.myscreen.keypad(True)
         curses.noecho()
-        self.dims = self.myscreen.getmaxyx()
-
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_BLACK)
-        events = em.EventSystem(dict({
-            "KeyPress": [self.myscreen.addstr]
-        }))
-        super().__init__(cs, entities, events)
+        super().__init__(cs, entities)
         self.default_config_check()
         self.config = config.GameConfiguration()
-        self.config.set_variable("Screen Width", int(self.dims[1]))
-        self.config.set_variable("Screen Height", int(self.dims[0]))
         self.apply_configuration(self.config)
-        self.player = self.get_camera_class()(dm.Point([4, 1, 1]), 90, 6, dm.Vector([3, 0, 0]))
-        self.el = self.get_hyper_ellipsoid_class()(dm.Point([5, 1, 1]), dm.Vector([3, 2, 1]), [3, 2, 1])
+        self.player = self.get_camera_class()(dm.Point([-100, -100, 1]), 80, 3000, dm.Vector([1, 1, 0]))
+        self.obj = self.get_hyper_ellipsoid_class()(position=dm.Point([200, 200, 1]),
+                                     direction=dm.Vector([2, 1, 1]),
+                                     semiaxes=[1, 1, 1])
 
-        self.console = vm.GameConsole(self.config.get_variable("Screen Width"), self.config.get_variable("Screen Height"))
-        self.vision = self.player.get_rays_matrix(self.dims[0], self.dims[1])
-        events.add("Move")
-        events.handle("Move", self.player.move)
-        events.add("Nod")
-        events.handle("Nod", self.player.set_direction)
-        events.add("Shake")
-        events.handle("Shake", self.player.planar_rotate)
+        self.obj2 = self.get_hyper_ellipsoid_class()(position=dm.Point([198, 204, 6]),
+                                      direction=dm.Vector([2, 1, 1]),
+                                      semiaxes=[0.1, 1, 3])
+
+        self.obj3 = self.get_hyper_ellipsoid_class()(position=dm.Point([500, 500, -2]),
+                                      direction=dm.Vector([2, 5, 2]),
+                                      semiaxes=[1, 2, 2])
+        self.console = vm.GameConsole(self.player.n, self.player.m)
+        events = em.EventSystem(dict({
+            "KeyPress": [self.myscreen.addstr],
+            "Move": [self.player.move],
+            "Nod": [self.player.set_direction],
+            "Shake": [self.player.planar_rotate]
+        }))
+        self.es = events
 
 
     def run(self):
         self.boot_up_anim()
         self.console.update(self.player, self.entities)
         self.myscreen.clear()
-        # curses.endwin()
-        # print(self.console.distances.floatlist)
-        # a = input()
         self.console.draw(self.myscreen)
         # self.console.draw(self.myscreen, ', '.join(list(map(str, self.player.position.floatlist[0]))))
 
@@ -69,34 +68,28 @@ class Game(cm.Game):
         if key in [ord("z"), ord("я"), ord("Z"), ord('Я')]:
             self.exit()
         elif key in [curses.KEY_UP, ord('w'), ord('ц'), ord("W"), ord("Ц")]:
-            go = dm.Vector([1, 0, 0])
-            self.es.trigger("Move", go)
+            go = self.player.direction
+            self.es.trigger("Move", go*30)
         elif key in [curses.KEY_DOWN, ord("s"), ord("ы"), ord("S"), ord("Ы")]:
-            go = dm.Vector([-1, 0, 0])
-            self.es.trigger("Move", go)
+            go = self.player.direction * (-1)
+            self.es.trigger("Move", go*30)
         elif key in [curses.KEY_LEFT, ord("a"), ord("A"), ord("ф"), ord("Ф")]:
-            go = dm.Vector([0, 1, 0])
-            self.es.trigger("Move", go)
+            go = (self.player.direction ** dm.Vector([0, 0.2, 0])).transpose()
+            self.es.trigger("Move", go * 5)
         elif key in [curses.KEY_RIGHT, ord("d"), ord("D"), ord("в"), ord("В")]:
-            go = dm.Vector([0, -1, 0])
-            self.es.trigger("Move", go)
-        elif key == curses.KEY_PPAGE:
-            go = dm.Vector([0, 0, 1])
-            self.es.trigger("Move", go)
-        elif key == curses.KEY_NPAGE:
-            go = dm.Vector([0, 0, -1])
-            self.es.trigger("Move", go)
+            go = (self.player.direction ** dm.Vector([0, -0.2, 0])).transpose()
+            self.es.trigger("Move", go * 5)
         elif key in [ord("i"), ord("I"), ord("ш"), ord("Ш")]:
-            go = dm.Vector([0, 0.25, 0])
+            go = dm.Vector([0, 0.005, 0])
             self.es.trigger("Nod", self.player.direction - go)
         elif key in [ord("k"), ord("K"), ord("л"), ord("Л")]:
-            go = dm.Vector([0, 0.25, 0])
+            go = dm.Vector([0, 0.005, 0])
             self.es.trigger("Nod", self.player.direction + go)
         elif key in [ord("J"), ord("j"), ord("о"), ord("О")]:
-            go = -25
+            go = 0.2
             self.es.trigger("Shake", [1, 2], go)
         elif key in [ord("l"), ord("L"), ord("д"), ord("Д")]:
-            go = 25
+            go = -0.2
             self.es.trigger("Shake", [1, 2], go)
         self.console.update(self.player, self.entities)
         self.console.draw(self.myscreen)
@@ -117,13 +110,12 @@ class Game(cm.Game):
             file.close()
         except Exception:
             file = open((par_dir + "\config\default.txt"), "w")
-            file.write("Screen Width: 1280\n")
-            file.write("Screen Height: 720")
+            file.write("Screen Width: 100\n")
+            file.write("Screen Height: 30")
         self.apply_configuration(config.GameConfiguration())
 
     def boot_up_anim(self):
         self.console.draw(self.myscreen, "0")
-        # self.console.draw(self.myscreen, ', '.join(list(map(str, self.player.position.floatlist[0]))))
 
 
 def main():

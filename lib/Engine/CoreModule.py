@@ -7,10 +7,15 @@ import lib.Engine.ConfigurationModule as config
 import lib.Engine.EventsModule as event
 import math
 
-PRECISION = 5
+PRECISION = 20
 
 class Ray:
     def __init__(self, cs, initpt, direction):
+        ep = 4
+        for i in range(0, len(initpt.floatlist[0])):
+            initpt.floatlist[0][i] = round(initpt.floatlist[0][i], ep)
+        for i in range(0, len(direction.floatlist[0])):
+            direction.floatlist[0][i] = round(direction.floatlist[0][i], ep)
         self.cs = cs
         self.initpt = initpt
         self.direction = direction
@@ -118,7 +123,7 @@ class EntitiesList(list):
 
 
 class Game:
-    def __init__(self, cs, entities, es):
+    def __init__(self, cs, entities, es=None):
         self.cs = cs
         self.entities = entities
         self.entity_class = self.get_entity_class()
@@ -139,7 +144,7 @@ class Game:
         pass
 
     def apply_configuration(self, cfg: config.GameConfiguration):
-        self.camera_class.m, self.camera_class.n = list(cfg.configuration.values())[0], list(cfg.configuration.values())[1]
+        self.camera_class.m, self.camera_class.n = int(list(cfg.configuration.values())[0]), int(list(cfg.configuration.values())[1])
 
     def get_event_system(self):
         return self.es.EventSystem
@@ -198,7 +203,8 @@ class Game:
                 meself.set_property("position", pos)
 
             def set_direction(meself, direction: dm.Vector):
-                meself.set_property("direction", direction)
+                dir = direction.normalize()
+                meself.set_property("direction", dir)
 
             @classmethod
             def intersection_distance(cls, ray: Ray):
@@ -217,101 +223,74 @@ class Game:
 
             def __init__(meself, pos: dm.Point, fov, drawdist, dirlook, vfov=None):
                 super().__init__(pos, dirlook)
+                fov = round((fov * math.pi) / 180, PRECISION)
                 if vfov is None:
-                    vfov = round(math.atan((int(GameCamera.m)/int(GameCamera.n)) * math.tan(math.radians(fov/2))), PRECISION)
+                    vfov = round(math.atan((int(GameCamera.m)/int(GameCamera.n)) * math.tan(fov/2)), PRECISION)
                     meself.set_property("vfov", vfov)
                 else:
+                    vfov = round(vfov, PRECISION)
                     meself.set_property("vfov", math.radians(vfov))
                     # vfov = fov
-                meself.set_property("fov", math.radians(fov))
+                meself.set_property("fov", fov)
                 meself.set_property("drawdist", drawdist)
-
+                meself.set_property("look_at", None)
                 if isinstance(dirlook, dm.Point):
-                    meself.remove_property("direction")
+                    meself.set_direction(None)
                     meself.set_property("look_at", dirlook)
 
             def planar_rotate(meself, indices: [int, int], angle: float):
-                if meself.is_property_exist("look_at"):
+                if meself.look_at is not None:
                     raise eem.EngineException(eem.EngineException.NO_DIR_ERROR)
                 super().planar_rotate(indices, angle)
                 meself.set_direction(meself.direction.transpose())
 
             def rotate_3d(meself, angles: [float, float, float]):
-                if meself.is_property_exist("look_at"):
+                if meself.look_at is not None:
                     raise eem.EngineException(eem.EngineException.NO_DIR_ERROR)
                 super().rotate_3d(angles)
 
             def get_rays_matrix(meself, n, m):
-                raylist = []
-                alpha, beta = meself.fov, meself.vfov
-                dalpha, dbeta = alpha/n, beta/m
+                result = dm.Matrix(n, m)
+                if meself.direction is not None:
 
-                for i in range(0, n):
-                    ai = dalpha * i - (alpha / 2)
-                    helper = []
+                    alpha, beta = meself.fov, meself.vfov
+                    dalpha, dbeta = alpha / n, beta / m
+                    vec = meself.direction
 
-                    for j in range(0, m):
-                        bi = dbeta * j - (beta / 2)
+                    for i in range(n):
+                        for j in range(m):
+                            temp_vec = dm.Vector(vec.floatlist)
+                            temp_vec = temp_vec.n_rotator(dalpha * i - alpha / 2, [0, 1], temp_vec.n) * temp_vec.transpose()
+                            temp_vec = temp_vec.n_rotator(dbeta * j - beta / 2, [0, 2], temp_vec.m) * temp_vec
+                            if (vec % temp_vec) == 0:
+                                raise mem.MathException(mem.MathException.ZERO_ERROR)
+                            temp_vec = (temp_vec * (vec.length() ** 2 / (vec % temp_vec)))
+                            result.floatlist[i][j] = Ray(meself.cs, meself.position, temp_vec.transpose())
 
-                        if meself.is_property_exist("look_at"):
-                            ray = dm.Matrix.n_rotator(ai, [0, 1], 3) * dm.Matrix.n_rotator(bi, [0, 2], 3)\
-                                  * meself.cs.vecspace.vector_form(meself.look_at - meself.position).transpose()
-                        else:
-                            ray = dm.Matrix.n_rotator(ai, [0, 1], 3) * dm.Matrix.n_rotator(bi, [0, 2], 3)\
-                                  * meself.direction.transpose()
-                        ray1 = Ray(meself.cs, meself.position, ray)
-                        helper.append(ray1)
-                    raylist.append(helper)
+                    return result
 
-                return dm.Matrix(raylist)
+                if meself.look_at is not None:
+                    look_at_vec = dm.Vector(meself.look_at.floatlist)
+                    position_vec = dm.Vector(meself.position.floatlist)
 
-                # result = [[None for i in range(0, m)] for j in range(0, n)]
-                # if meself.direction is not None:
-                #
-                #     alpha, beta = meself.fov, meself.vfov
-                #     dalpha, dbeta = alpha / n, beta / m
-                #     vec = meself.direction
-                #
-                #     for i in range(n):
-                #         for j in range(m):
-                #             temp_vec = dm.Vector(vec.floatlist)
-                #             temp_vec = temp_vec.n_rotator(dalpha * i - alpha / 2, [0, 1], temp_vec.n) * temp_vec.transpose()
-                #             temp_vec = temp_vec.n_rotator(dbeta * j - beta / 2, [0, 2], temp_vec.m) * temp_vec
-                #             if (vec % temp_vec) == 0:
-                #                 raise mem.MathException(mem.MathException.ZERO_ERROR)
-                #             temp_vec = (temp_vec * (vec.length() ** 2 / (vec % temp_vec)))
-                #             # temp_vec.values = [round(x, PRECISION) for x in temp_vec.values]
-                #             result[i][j] = Ray(meself.cs, meself.position, temp_vec)
-                #
-                #     return result
-                #
-                # if meself.look_at is not None:
-                #     look_at_vec = dm.Vector([x for x in meself.look_at.values])
-                #     position_vec = dm.Vector([x for x in meself.position.values])
-                #
-                #     vec = (look_at_vec - position_vec).normalize()
-                #
-                #     alpha, beta = meself.fov, meself.vfov
-                #     dalpha, dbeta = alpha / n, beta / m
-                #
-                #     for i in range(n):
-                #         for j in range(m):
-                #             temp_vec = vec.copy()
-                #             temp_vec = temp_vec.n_rotator(dalpha * i - alpha / 2, [0, 1], temp_vec.n) * temp_vec.transpose()
-                #             temp_vec = temp_vec.n_rotator(dbeta * j - beta / 2, [0, 2], temp_vec.m) * temp_vec
-                #             if (vec % temp_vec) == 0:
-                #                 raise mem.MathException(mem.MathException.ZERO_ERROR)
-                #             temp_vec = (temp_vec * (vec.length() ** 2 / (vec % temp_vec)))
-                #             temp_vec.values = [round(x, PRECISION) for x in temp_vec.values]
-                #             result[i][j] = Ray(meself.cs, meself.position, temp_vec)
-                #
-                #     return result
+                    vec = (look_at_vec - position_vec).normalize()
 
-                # if meself.is_property_exist("look_at"):
-                #     raise eem.EngineException(eem.EngineException.NO_DIR_ERROR)
+                    alpha, beta = meself.fov, meself.vfov
+                    dalpha, dbeta = alpha / n, beta / m
 
-            def intersection_distance(meself, ray):
-                return -1
+                    for i in range(n):
+                        for j in range(m):
+                            temp_vec = vec.copy()
+                            temp_vec = temp_vec.n_rotator(dalpha * i - alpha / 2, [0, 1], temp_vec.n) * temp_vec.transpose()
+                            temp_vec = temp_vec.n_rotator(dbeta * j - beta / 2, [0, 2], temp_vec.m) * temp_vec
+                            if (vec % temp_vec) == 0:
+                                raise mem.MathException(mem.MathException.ZERO_ERROR)
+                            temp_vec = (temp_vec * (vec.length() ** 2 / (vec % temp_vec)))
+                            temp_vec = dm.Vector(temp_vec.floatlist)
+                            result[i][j] = Ray(meself.cs, meself.position, temp_vec)
+
+                    return result
+
         return GameCamera
 
     def get_hyper_plane_class(self):
@@ -337,10 +316,10 @@ class Game:
                         raise eem.EngineException("Parallel ray")
                 else:
                     t = -(abc % (rpt - pos))/(abc % dirvec)
-                    if t < 0:
-                        return -1
+                    if t <= 0:
+                        return 0
                     else:
-                        return (dirvec * t).length()
+                        return round(((rpt + dirvec) * t).length(), PRECISION) / 2
 
         return GameHyperPlane
 
@@ -362,57 +341,38 @@ class Game:
 
             def intersection_distance(meself, ray):
                 rpt = ray.initpt  # Point
-
+                pos = meself.position
                 dirvec = ray.direction  # Vector
                 abc = meself.direction  # Vector
 
                 alpha = 0
                 beta = 0
                 gamma = 0
+                delta = 0
 
-                for i in range(0, len(abc.floatlist)):
-                    alpha += (rpt[i] ** 2) / (abc[i] ** 2)
-                    beta += (dirvec[i] * rpt[i]) / (abc[i] ** 2)
-                    gamma += (dirvec[i] ** 2) / (abc[i] ** 2)
+                for i in range(0, len(abc.floatlist[0])):
+                    alpha += dirvec[i] ** 2
+                    beta += dirvec[i] * (rpt[i] - pos[i])
+                    gamma += (rpt[i] - pos[i]) ** 2
+                    delta += meself.semiaxes[i] ** 2
 
                 beta *= 2
-                gamma -= 1
-
-                round(alpha, PRECISION)
-                round(beta, PRECISION)
-                round(gamma, PRECISION)
+                gamma -= delta
 
                 disc = beta ** 2 - 4 * alpha * gamma  # float
                 if disc < 0:
-                    return -1
+                    return 0
 
                 elif disc >= 0:
-                    t1 = round((-beta + math.sqrt(disc)) / (2 * alpha), PRECISION)  # float
-                    t2 = round((-beta - math.sqrt(disc)) / (2 * alpha), PRECISION)  # float
+                    t1 = (-beta - math.sqrt(disc)) / (2 * alpha)  # float
+                    t2 = (-beta + math.sqrt(disc)) / (2 * alpha)  # float
 
-                    v1 = dirvec * t1  # Vector
-                    v2 = dirvec * t2  # Vector
-
-                    if (t1 > 0) and (t2 > 0):
-                        return min(v1.length(), v2.length())
-
-                    elif (t1 > 0) and (t2 <= 0):
-                        return v1.length()
-
-                    elif (t1 <= 0) and (t2 < 0):
-                        return v2.length()
-
-                    else:
-                        return -1
+                    if t1 < 0:
+                        if t2 < 0:
+                            return 0
+                        return t2
+                    if t2 < 0:
+                        return t1
+                    return round(min(t1, t2), PRECISION)
 
         return GameHyperEllipsoid
-
-# alpha = (rpt[0] ** 2) / (abc[0] ** 2) + (rpt[1] ** 2) / (abc[1] ** 2) + (rpt[2] ** 2) / (
-#         abc[2] ** 2)  # float
-# beta = 2 * ((dirvec[0] * rpt[0]) / (abc[0] ** 2) + (dirvec[1] * rpt[1]) / (abc[1] ** 2) + (
-#             dirvec[2] * rpt[2]) / (abc[2] ** 2))  # float
-# gamma = (dirvec[0] ** 2)/(abc[0] ** 2) + (dirvec[1] ** 2)/(abc[1] ** 2) + (dirvec[2] ** 2)/(abc[2] ** 2) - 1 # float
-
-
-# print(f"\n{alpha} {beta} {gamma}")
-

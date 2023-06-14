@@ -1,2 +1,2 @@
-Screen Width: 1280
-Screen Height: 720
+Screen Width: 100
+Screen Height: 20
